@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Fulan & Fulanah Wedding</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;background:#0a0a1e;overflow:hidden;font-family:'Press Start 2P',monospace;}
+
+/* OPENING */
+#opening{
+  position:fixed;inset:0;z-index:100;
+  background:radial-gradient(ellipse at 50% 60%,#1a0a3e 0%,#0a0a1e 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+}
+.star-field{position:absolute;inset:0;pointer-events:none;}
+.px-star{position:absolute;background:#fff;image-rendering:pixelated;}
+@keyframes twk{0%,100%{opacity:1}50%{opacity:.15}}
+
+.o-moon{position:absolute;top:12%;right:15%;width:48px;height:48px;background:#ffeaa0;box-shadow:4px 4px 0 #e8d060;image-rendering:pixelated;}
+.o-moon::after{content:'';position:absolute;top:6px;right:6px;width:18px;height:18px;background:#e8d060;border-radius:0;}
+
+.lantern{position:absolute;animation:sway 3s ease-in-out infinite alternate;}
+.lantern:nth-child(2){left:8%;top:20%;animation-delay:-.5s;}
+.lantern:nth-child(3){right:8%;top:20%;animation-delay:-1s;}
+@keyframes sway{from{transform:rotate(-4deg)}to{transform:rotate(4deg)}}
+.lantern-body{width:24px;height:32px;background:#e85d04;border:2px solid #9d2800;position:relative;}
+.lantern-body::before{content:'';position:absolute;top:-8px;left:8px;width:8px;height:8px;background:#9d2800;}
+.lantern-body::after{content:'';position:absolute;bottom:-10px;left:8px;width:8px;height:10px;background:#e85d04;}
+.lantern-glow{position:absolute;inset:-8px;background:rgba(255,150,0,.15);}
+
+.o-title{
+  font-size:clamp(18px,5vw,32px);color:#fff;text-align:center;
+  text-shadow:0 0 0 #7b2d8b,4px 4px 0 #7b2d8b,8px 8px 0 #4a1a5e;
+  line-height:1.8;z-index:1;margin-bottom:12px;
+  animation:titleIn 1s steps(1) forwards;
+}
+@keyframes titleIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.o-divider{display:flex;align-items:center;gap:12px;z-index:1;margin-bottom:10px;}
+.o-divider span{color:#c9a0dc;font-size:10px;}
+.o-divider::before,.o-divider::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,transparent,#7b2d8b,transparent);}
+.o-date{color:#e8c5ff;font-size:10px;z-index:1;margin-bottom:32px;text-shadow:2px 2px 0 #7b2d8b;}
+
+.o-hearts{display:flex;gap:8px;z-index:1;margin-bottom:28px;}
+.px-heart{width:16px;height:16px;position:relative;image-rendering:pixelated;}
+.px-heart svg{width:16px;height:16px;}
+@keyframes hpop{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+
+#open-btn{
+  position:relative;z-index:10;
+  background:#7b2d8b;color:#fff;
+  border:4px solid #e8c5ff;
+  font-family:'Press Start 2P',monospace;font-size:11px;
+  padding:16px 32px;cursor:pointer;
+  box-shadow:6px 6px 0 #4a1a5e,-2px -2px 0 #b060d0;
+  transition:box-shadow .1s,transform .1s;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+#open-btn:hover{background:#9b3dab;}
+#open-btn:active,#open-btn.pressed{transform:translate(4px,4px);box-shadow:2px 2px 0 #4a1a5e;}
+@keyframes btnblink{0%,100%{border-color:#e8c5ff}50%{border-color:#c9a0dc}}
+.btn-anim{animation:btnblink 1.2s steps(1) infinite;}
+
+/* GAME */
+#game{position:fixed;inset:0;display:none;background:#1a0a2e;overflow:hidden;}
+canvas#gc{display:block;image-rendering:pixelated;image-rendering:crisp-edges;}
+
+/* DIALOG BOX - RPG style */
+#dlg{
+  position:fixed;bottom:0;left:0;right:0;z-index:60;display:none;
+  background:#0d0820;border-top:4px solid #c9a0dc;
+  padding:0;
+}
+.dlg-inner{padding:14px 18px 16px;position:relative;min-height:100px;}
+#dlg-face{
+  position:absolute;left:16px;top:-52px;
+  width:48px;height:48px;image-rendering:pixelated;
+}
+.dlg-content{margin-left:0;}
+#dlg-name{
+  font-size:8px;color:#e8c5ff;margin-bottom:8px;
+  background:#1a0a3e;display:inline-block;padding:4px 10px;
+  border:2px solid #7b2d8b;
+}
+#dlg-text{font-size:clamp(14px,3.5vw,18px);color:#fff;line-height:1.7;font-family:'Press Start 2P',monospace;}
+#dlg-choices{margin-top:10px;}
+.dlg-choice{
+  display:block;color:#c9a0dc;padding:5px 8px;cursor:pointer;
+  font-size:clamp(10px,2.5vw,13px);border-left:3px solid transparent;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.dlg-choice:hover,.dlg-choice:active,.dlg-choice.sel{
+  color:#fff;border-left-color:#c9a0dc;background:rgba(123,45,139,.3);
+}
+#dlg-arrow{position:absolute;bottom:12px;right:16px;color:#c9a0dc;font-size:16px;animation:blink 1s steps(1) infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.dlg-tap-hint{position:absolute;bottom:12px;right:16px;font-size:8px;color:#7b6b8b;animation:blink 1.5s steps(1) infinite;}
+
+/* POPUP */
+#pop{
+  position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.88);
+  display:none;align-items:center;justify-content:center;padding:12px;
+  touch-action:pan-y;
+}
+#pop.on{display:flex;}
+#pop-box{
+  background:#0d0820;border:4px solid #c9a0dc;
+  max-width:500px;width:100%;max-height:92vh;
+  overflow-y:auto;position:relative;
+  box-shadow:8px 8px 0 #7b2d8b;
+}
+#pop-head{
+  background:#1a0a3e;border-bottom:3px solid #7b2d8b;
+  padding:12px 16px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:1;
+}
+#pop-title{font-size:9px;color:#e8c5ff;text-shadow:2px 2px 0 #7b2d8b;}
+#pop-x{
+  background:#7b2d8b;border:2px solid #e8c5ff;color:#fff;
+  font-family:'Press Start 2P',monospace;font-size:7px;
+  padding:6px 8px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+#pop-body{padding:16px;color:#c9a0dc;font-size:clamp(13px,3vw,16px);line-height:1.7;font-family:'Press Start 2P',monospace;}
+#pop-body h3{font-size:8px;color:#e8c5ff;margin:14px 0 8px;border-left:3px solid #7b2d8b;padding-left:8px;}
+#pop-body p{margin-bottom:8px;font-size:clamp(11px,2.5vw,14px);}
+.ecard{background:#1a0a3e;border:2px solid #7b2d8b;padding:12px;margin-bottom:10px;}
+.ecard-title{font-size:7px;color:#e8c5ff;margin-bottom:6px;}
+.cdown{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0 4px;}
+.cu{background:#1a0a3e;border:2px solid #7b2d8b;text-align:center;padding:8px 4px;}
+.cn{font-size:clamp(14px,4vw,20px);color:#e8c5ff;display:block;}
+.cl{font-size:8px;color:#7b6b9b;}
+#pop-body input,#pop-body select,#pop-body textarea{
+  width:100%;background:#0a0615;border:2px solid #7b2d8b;
+  color:#e8c5ff;font-family:'Press Start 2P',monospace;
+  font-size:clamp(10px,2.5vw,13px);padding:10px;margin-bottom:10px;outline:none;
+  -webkit-tap-highlight-color:transparent;
+}
+#pop-body textarea{height:80px;resize:none;}
+.pbtn{
+  background:#7b2d8b;border:3px solid #e8c5ff;color:#fff;
+  font-family:'Press Start 2P',monospace;font-size:8px;
+  padding:12px;cursor:pointer;box-shadow:4px 4px 0 #4a1a5e;
+  width:100%;display:block;margin-top:4px;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.pbtn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #4a1a5e;}
+.uitem{background:#1a0a3e;border:2px solid #7b2d8b;padding:10px;margin-bottom:8px;}
+.uname{font-size:7px;color:#e8c5ff;margin-bottom:4px;}
+.utext{font-size:clamp(11px,2.5vw,14px);color:#c9a0dc;}
+#ulist{max-height:160px;overflow-y:auto;margin-top:8px;}
+
+/* CONTROLS */
+#controls{position:fixed;bottom:0;left:0;right:0;z-index:55;display:none;pointer-events:none;}
+#dpad{
+  position:absolute;bottom:16px;left:16px;
+  width:110px;height:74px;pointer-events:all;
+}
+.db{
+  position:absolute;width:34px;height:34px;
+  background:rgba(10,6,30,.85);border:3px solid #7b2d8b;
+  color:#c9a0dc;font-size:16px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;
+  box-shadow:3px 3px 0 #4a1a5e;
+}
+.db:active,.db.pressed{background:#7b2d8b;transform:translate(2px,2px);box-shadow:1px 1px 0 #4a1a5e;}
+#dl{left:0;top:20px;}#dr{right:0;top:20px;}#du{left:38px;top:0;}#dd{left:38px;bottom:0;}
+
+#abtn{
+  position:absolute;bottom:16px;right:16px;pointer-events:all;
+  background:#7b2d8b;border:3px solid #e8c5ff;color:#fff;
+  font-family:'Press Start 2P',monospace;font-size:8px;
+  padding:14px 12px;cursor:pointer;box-shadow:4px 4px 0 #4a1a5e;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+#abtn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #4a1a5e;}
+#mbtn{
+  position:fixed;top:8px;right:8px;z-index:56;
+  background:rgba(10,6,30,.9);border:2px solid #7b2d8b;
+  color:#c9a0dc;font-family:'Press Start 2P',monospace;font-size:8px;
+  padding:6px 8px;cursor:pointer;display:none;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* HUD */
+#hud{
+  position:fixed;top:0;left:0;right:0;z-index:54;display:none;
+  pointer-events:none;
+}
+#hud-bar{
+  background:rgba(10,6,30,.9);border-bottom:3px solid #7b2d8b;
+  padding:6px 12px;display:flex;align-items:center;gap:16px;
+}
+#hud-loc{font-size:7px;color:#e8c5ff;}
+#hud-tip{font-size:6px;color:#7b6b9b;margin-left:auto;}
+
+/* INTERACT BUBBLE */
+#ibubble{
+  position:fixed;z-index:56;display:none;
+  background:#0d0820;border:3px solid #c9a0dc;
+  font-size:7px;color:#e8c5ff;padding:7px 12px;
+  box-shadow:3px 3px 0 #7b2d8b;pointer-events:none;
+  white-space:nowrap;
+}
+
+/* TRANSITION */
+#tr{position:fixed;inset:0;z-index:200;background:#0a0a1e;opacity:0;pointer-events:none;transition:opacity .5s;}
+#tr.on{opacity:1;pointer-events:all;}
+</style>
+</head>
+<body>
+<div id="tr"></div>
+
+<!-- OPENING -->
+<div id="opening">
+  <div class="star-field" id="stars"></div>
+  <div class="o-moon"></div>
+  <div class="lantern"><div class="lantern-body"><div class="lantern-glow"></div></div></div>
+  <div class="lantern"><div class="lantern-body"><div class="lantern-glow"></div></div></div>
+  <div class="o-hearts">
+    <svg width="16" height="16" style="animation:hpop 1.2s steps(1) infinite"><rect x="2" y="4" width="4" height="4" fill="#ff69b4"/><rect x="8" y="4" width="4" height="4" fill="#ff69b4"/><rect x="0" y="6" width="14" height="4" fill="#ff69b4"/><rect x="2" y="10" width="10" height="2" fill="#ff69b4"/><rect x="4" y="12" width="6" height="2" fill="#ff69b4"/><rect x="6" y="14" width="2" height="2" fill="#ff69b4"/></svg>
+    <svg width="16" height="16" style="animation:hpop 1.2s .4s steps(1) infinite"><rect x="2" y="4" width="4" height="4" fill="#e8c5ff"/><rect x="8" y="4" width="4" height="4" fill="#e8c5ff"/><rect x="0" y="6" width="14" height="4" fill="#e8c5ff"/><rect x="2" y="10" width="10" height="2" fill="#e8c5ff"/><rect x="4" y="12" width="6" height="2" fill="#e8c5ff"/><rect x="6" y="14" width="2" height="2" fill="#e8c5ff"/></svg>
+    <svg width="16" height="16" style="animation:hpop 1.2s .8s steps(1) infinite"><rect x="2" y="4" width="4" height="4" fill="#ff69b4"/><rect x="8" y="4" width="4" height="4" fill="#ff69b4"/><rect x="0" y="6" width="14" height="4" fill="#ff69b4"/><rect x="2" y="10" width="10" height="2" fill="#ff69b4"/><rect x="4" y="12" width="6" height="2" fill="#ff69b4"/><rect x="6" y="14" width="2" height="2" fill="#ff69b4"/></svg>
+  </div>
+  <div class="o-title">Fulan<br>&amp;<br>Fulanah</div>
+  <div class="o-divider"><span>♦ ♦ ♦</span></div>
+  <div class="o-date" style="margin-top:8px">28 . 02 . 2026</div>
+  <button id="open-btn" class="btn-anim">▶ BUKA UNDANGAN</button>
+</div>
+
+<!-- GAME -->
+<div id="game"><canvas id="gc"></canvas></div>
+
+<!-- HUD -->
+<div id="hud">
+  <div id="hud-bar">
+    <div id="hud-loc">🏡 Desa Cinta</div>
+    <div id="hud-tip">Dekati bangunan → tekan AKSI</div>
+  </div>
+</div>
+
+<!-- INTERACT BUBBLE -->
+<div id="ibubble">▲ AKSI</div>
+
+<!-- DIALOG -->
+<div id="dlg">
+  <div class="dlg-inner">
+    <div id="dlg-name">???</div>
+    <div id="dlg-text"></div>
+    <div id="dlg-choices"></div>
+    <div id="dlg-arrow">▼</div>
+  </div>
+</div>
+
+<!-- POPUP -->
+<div id="pop">
+  <div id="pop-box">
+    <div id="pop-head">
+      <div id="pop-title">INFO</div>
+      <button id="pop-x">✕ TUTUP</button>
+    </div>
+    <div id="pop-body"></div>
+  </div>
+</div>
+
+<!-- CONTROLS -->
+<div id="controls">
+  <div id="dpad">
+    <div class="db" id="dl">◀</div>
+    <div class="db" id="dr">▶</div>
+    <div class="db" id="du">▲</div>
+    <div class="db" id="dd">▼</div>
+  </div>
+  <button id="abtn">✦<br>AKSI</button>
+</div>
+<button id="mbtn">♪ ON</button>
+
+<script>
+// ============================================================
+// STARS
+// ============================================================
+(function(){
+  const sf=document.getElementById('stars');
+  for(let i=0;i<100;i++){
+    const d=document.createElement('div');
+    d.className='px-star';
+    const sz=Math.random()<.25?3:Math.random()<.5?2:1;
+    Object.assign(d.style,{
+      width:sz+'px',height:sz+'px',
+      left:Math.random()*100+'%',top:Math.random()*100+'%',
+      animation:`twk ${1+Math.random()*2}s ${Math.random()*3}s steps(1) infinite`
+    });
+    sf.appendChild(d);
+  }
+})();
+
+// ============================================================
+// AUDIO
+// ============================================================
+let AC=null,musicOn=false,musicTimer=null;
+function initAC(){try{AC=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+function pn(f,t,dur,v=.1){
+  if(!AC)return;
+  try{
+    const o=AC.createOscillator(),g=AC.createGain();
+    o.connect(g);g.connect(AC.destination);
+    o.type='square';o.frequency.value=f;
+    const n=AC.currentTime;
+    g.gain.setValueAtTime(0,n+t);g.gain.linearRampToValueAtTime(v,n+t+.01);
+    g.gain.linearRampToValueAtTime(0,n+t+dur-.01);
+    o.start(n+t);o.stop(n+t+dur);
+  }catch(e){}
+}
+const BGM=[[523,.0],[659,.3],[784,.6],[1047,.9],[784,1.2],[659,1.5],[523,1.8],[440,2.1],[523,2.4],[659,2.7],[784,3.0],[659,3.3],[523,3.6],[440,3.9],[392,4.2],[440,4.5],[523,4.8],[659,5.1],[784,5.4],[1047,5.7],[880,6.0],[784,6.3],[659,6.6],[523,6.9]];
+function startBGM(){BGM.forEach(([f,t])=>pn(f,t,.25,.08));musicTimer=setInterval(()=>{if(musicOn)BGM.forEach(([f,t])=>pn(f,t,.25,.08));},7200);}
+function stopBGM(){clearInterval(musicTimer);}
+function toggleMusic(){musicOn=!musicOn;document.getElementById('mbtn').textContent=musicOn?'♪ ON':'♪ OFF';musicOn?startBGM():stopBGM();}
+document.getElementById('mbtn').addEventListener('click',toggleMusic);
+
+// ============================================================
+// CANVAS SETUP
+// ============================================================
+let CV,CX,W,H;
+function setupCanvas(){
+  CV=document.getElementById('gc');CX=CV.getContext('2d');
+  CX.imageSmoothingEnabled=false;
+  function rsz(){W=CV.width=window.innerWidth;H=CV.height=window.innerHeight;}
+  rsz();window.addEventListener('resize',rsz);
+}
+
+// ============================================================
+// PIXEL ART DRAWING HELPERS
+// ============================================================
+function px(x,y,w,h,col){CX.fillStyle=col;CX.fillRect(Math.round(x),Math.round(y),w,h);}
+
+// DRAW DETAILED SKY GRADIENT
+function drawSky(){
+  const grad=CX.createLinearGradient(0,0,0,H*.7);
+  grad.addColorStop(0,'#2d1b69');grad.addColorStop(.4,'#4a2585');grad.addColorStop(.7,'#7b3fa0');grad.addColorStop(1,'#3a1060');
+  CX.fillStyle=grad;CX.fillRect(0,0,W,H);
+}
+
+// STARS IN BG
+const BG_STARS=[];
+for(let i=0;i<60;i++)BG_STARS.push({x:Math.random(),y:Math.random()*.55,s:Math.random()<.2?2:1,t:Math.random()*Math.PI*2});
+
+function drawBGStars(t){
+  BG_STARS.forEach(s=>{
+    const alpha=.4+.6*Math.abs(Math.sin(s.t+t*.5));
+    CX.fillStyle=`rgba(255,255,255,${alpha})`;
+    CX.fillRect(s.x*W,s.y*H,s.s,s.s);
+  });
+}
+
+// MOON
+function drawMoon(ox){
+  const mx=W*.75-ox*.1,my=H*.08;
+  px(mx,my,40,40,'#ffeaa0');px(mx+4,my+4,40,40,'rgba(0,0,0,0)');
+  // craters
+  px(mx+8,my+8,6,6,'#e8d060');px(mx+22,my+16,4,4,'#e8d060');px(mx+12,my+24,4,4,'#e8d060');
+  // glow
+  CX.fillStyle='rgba(255,234,160,.08)';CX.fillRect(mx-16,my-16,72,72);
+}
+
+// MOUNTAIN LAYERS
+function drawMountains(ox){
+  const off1=ox*.05,off2=ox*.08,off3=ox*.12;
+  // far mountain
+  CX.fillStyle='#2a1550';
+  drawMountainShape(W*.1-off1,H*.52,W*.5,H*.28);
+  drawMountainShape(W*.4-off1,H*.52,W*.45,H*.24);
+  drawMountainShape(W*.65-off1,H*.52,W*.5,H*.3);
+  // mid mountain
+  CX.fillStyle='#1e0e40';
+  drawMountainShape(W*.0-off2,H*.6,W*.4,H*.22);
+  drawMountainShape(W*.3-off2,H*.6,W*.5,H*.26);
+  drawMountainShape(W*.7-off2,H*.6,W*.4,H*.2);
+  // near mountain
+  CX.fillStyle='#150930';
+  drawMountainShape(-off3,H*.68,W*.3,H*.18);
+  drawMountainShape(W*.25-off3,H*.68,W*.35,H*.2);
+  drawMountainShape(W*.55-off3,H*.68,W*.3,H*.18);
+  drawMountainShape(W*.8-off3,H*.68,W*.28,H*.16);
+}
+
+function drawMountainShape(x,y,w,h){
+  CX.beginPath();CX.moveTo(x,y+h);CX.lineTo(x+w*.5,y);CX.lineTo(x+w,y+h);CX.closePath();CX.fill();
+}
+
+// GROUND
+function drawGround(){
+  // dark ground base
+  const gy=H*.72;
+  px(0,gy,W,H-gy,'#0d0620');
+  // grass strip
+  px(0,gy,W,12,'#2d7a1f');
+  // grass highlights
+  for(let x=0;x<W;x+=8){px(x,gy,4,6,Math.random()<.3?'#3d9a2f':'#2d7a1f');}
+  // path
+  const ph=H-gy-12;
+  px(0,gy+12,W,ph,'#1a0e35');
+  // path texture
+  for(let x=0;x<W;x+=32){
+    px(x,gy+16,28,2,'rgba(255,255,255,0.04)');
+    px(x+16,gy+24,24,2,'rgba(255,255,255,0.03)');
+  }
+  // floor line pixel art style
+  for(let x=0;x<W;x+=4){
+    if((x/4)%2===0)px(x,gy+11,4,2,'#1d6a0f');
+  }
+}
+
+// LANTERNS on rope
+function drawLanterns(t,ox){
+  const num=8,ropeY=H*.35;
+  for(let i=0;i<num;i++){
+    const lx=((i/(num-1))*(W*1.8)-W*.4-ox*.3+W*10)%(W*1.8)-W*.4;
+    const sway=Math.sin(t+i*.7)*.5;
+    const ly=ropeY+sway*8+i%2*12;
+    // rope
+    if(i<num-1){
+      const nx=((i+1)/(num-1))*(W*1.8)-W*.4-ox*.3;
+      CX.strokeStyle='rgba(200,180,100,.5)';CX.lineWidth=1;
+      CX.beginPath();CX.moveTo(lx+6,ly);CX.lineTo(nx+6,ly+2);CX.stroke();
+    }
+    // lantern body
+    px(lx,ly,12,18,'#e85d04');px(lx+2,ly+2,8,14,'#ff8c00');
+    px(lx+4,ly+4,4,8,'rgba(255,255,200,.6)'); // glow
+    px(lx+2,ly,8,4,'#9d2800'); // top cap
+    px(lx+4,ly-4,4,4,'#c8a000'); // string
+    px(lx+2,ly+18,8,3,'#e85d04'); // bottom fringe
+    px(lx+4,ly+21,4,4,'rgba(255,120,0,.4)'); // tassel
+    // glow effect
+    CX.fillStyle='rgba(255,140,0,.06)';CX.fillRect(lx-8,ly-4,28,30);
+  }
+}
+
+// DETAILED TREES
+function drawTree(x,y,scale=1){
+  const s=scale;
+  const tx=x,ty=y;
+  // trunk
+  px(tx+10*s,ty+32*s,8*s,20*s,'#6b3d1e');
+  px(tx+12*s,ty+32*s,4*s,20*s,'#8b5e3c');
+  // root
+  px(tx+6*s,ty+48*s,6*s,4*s,'#5a3015');
+  px(tx+16*s,ty+48*s,6*s,4*s,'#5a3015');
+  // canopy layers
+  px(tx+2*s,ty+20*s,24*s,16*s,'#1a6b10');
+  px(tx,ty+10*s,28*s,14*s,'#2d7a1f');
+  px(tx+2*s,ty+2*s,24*s,12*s,'#3d9a2f');
+  px(tx+6*s,ty-6*s,16*s,12*s,'#4db83f');
+  // highlights
+  px(tx+4*s,ty+4*s,4*s,8*s,'#5dd04f');
+  px(tx+8*s,ty,4*s,4*s,'#6de05f');
+  // dark shading
+  px(tx+20*s,ty+4*s,6*s,24*s,'#1a5a10');
+  px(tx+18*s,ty+20*s,8*s,14*s,'#0d4a08');
+}
+
+// DETAILED HOUSE / BUILDING
+function drawBuilding(x,y,w,h,col,roofCol,label,active){
+  // shadow
+  px(x+6,y+h+4,w+2,8,'rgba(0,0,0,0.4)');
+  // walls
+  px(x,y,w,h,col);
+  // brick pattern
+  for(let row=0;row<Math.floor(h/8);row++){
+    const off=row%2===0?0:8;
+    for(let bx=off;bx<w;bx+=16){
+      px(x+bx,y+row*8,14,6,'rgba(255,255,255,0.04)');
+      px(x+bx,y+row*8,14,1,'rgba(255,255,255,0.08)');
+    }
+  }
+  // wall shading right
+  px(x+w-6,y,6,h,'rgba(0,0,0,0.2)');
+  // wall shading bottom
+  px(x,y+h-6,w,6,'rgba(0,0,0,0.15)');
+  // roof
+  const rx=x-8,ry=y-24;
+  px(rx,ry,w+16,28,roofCol);
+  // roof tiles
+  for(let tx2=rx;tx2<rx+w+16;tx2+=12){
+    px(tx2,ry+4,10,4,'rgba(0,0,0,0.15)');
+    px(tx2+6,ry+12,10,4,'rgba(0,0,0,0.1)');
+    px(tx2,ry+20,10,4,'rgba(0,0,0,0.12)');
+  }
+  // roof highlight
+  px(rx,ry,w+16,3,'rgba(255,255,255,0.15)');
+  // roof shadow underside
+  px(rx,ry+25,w+16,3,'rgba(0,0,0,0.3)');
+  // chimney
+  px(x+w-28,ry-16,12,20,'rgba(0,0,0,0.5)');
+  px(x+w-26,ry-14,8,16,col);
+  // windows
+  const winY=y+12;
+  const wc=Math.max(1,Math.floor(w/48));
+  for(let wi=0;wi<wc;wi++){
+    const wx=x+12+wi*40;
+    px(wx,winY,24,20,'#1a0a3e');// frame dark
+    px(wx+2,winY+2,20,16,'#87ceeb');// glass
+    // window cross
+    px(wx+11,winY+2,2,16,'rgba(0,0,0,0.3)');
+    px(wx+2,winY+9,20,2,'rgba(0,0,0,0.3)');
+    // window shine
+    px(wx+3,winY+3,6,4,'rgba(255,255,255,0.4)');
+    // curtain hint
+    px(wx+2,winY+2,5,14,'rgba(200,150,255,.2)');
+    px(wx+15,winY+2,5,14,'rgba(200,150,255,.2)');
+    // light from window at night
+    CX.fillStyle='rgba(135,206,235,0.05)';
+    CX.fillRect(wx-4,winY+20,32,40);
+  }
+  // door centered
+  const dx=x+w/2-10;
+  const dy2=y+h-36;
+  px(dx,dy2,20,36,'#4a2510');
+  px(dx+2,dy2+2,16,32,'#6b3d1e');// door wood
+  // door arch top
+  px(dx,dy2,20,4,'#6b3d1e');
+  // door knob
+  px(dx+15,dy2+18,3,3,'#ffd700');
+  // door frame
+  px(dx-2,dy2-2,2,38,'#3a1a08');
+  px(dx+20,dy2-2,2,38,'#3a1a08');
+  // sign above
+  const sl=label||'';
+  const sw2=Math.max(80,sl.length*7+20);
+  const sx=x+w/2-sw2/2;
+  const sy2=ry-20;
+  px(sx,sy2,sw2,16,'#1a0a3e');
+  px(sx,sy2,sw2,2,'#7b2d8b');
+  px(sx,sy2+14,sw2,2,'#7b2d8b');
+  px(sx,sy2,2,16,'#7b2d8b');
+  px(sx+sw2-2,sy2,2,16,'#7b2d8b');
+  CX.fillStyle=active?'#ffe066':'#e8c5ff';
+  CX.font='6px "Press Start 2P",monospace';
+  CX.textAlign='center';CX.textBaseline='middle';
+  CX.fillText(sl,x+w/2,sy2+8);
+  // active glow
+  if(active){
+    CX.fillStyle='rgba(255,220,100,.12)';
+    CX.fillRect(x-4,ry-24,w+8,h+28);
+    // pulsing border
+    CX.strokeStyle='rgba(255,220,100,.6)';
+    CX.lineWidth=2;
+    CX.strokeRect(x-2,ry-22,w+4,h+24);
+  }
+}
+
+// DETAILED FLOWER BUSH
+function drawFlowers(x,y){
+  // bush base
+  px(x,y+8,20,8,'#1a6b10');
+  // flowers
+  const fdata=[[0,0,'#ff69b4'],[8,4,'#ff9ef5'],[16,2,'#ffb7d5'],[4,8,'#ff69b4'],[12,6,'#fffacd']];
+  fdata.forEach(([fx,fy,fc])=>{
+    px(x+fx+2,y+fy+2,4,4,'#1a6b10');// stem
+    px(x+fx,y+fy,4,4,fc);px(x+fx+4,y+fy,4,4,fc);
+    px(x+fx,y+fy+4,4,4,fc);px(x+fx+4,y+fy+4,4,4,fc);
+    px(x+fx+2,y+fy+2,4,4,'#fff');// center
+    px(x+fx+2,y+fy+2,2,2,'#ffd700');
+  });
+}
+
+// FENCE DETAIL
+function drawFence(x,y,len){
+  for(let i=0;i<len;i+=16){
+    // post
+    px(x+i,y,4,24,'#8b5e3c');px(x+i+1,y,2,24,'#a0703c');
+    // post cap
+    px(x+i-1,y-2,6,4,'#6b3d1e');
+    // rails
+    if(i+16<=len){
+      px(x+i+4,y+4,12,3,'#c8a06e');px(x+i+4,y+14,12,3,'#c8a06e');
+    }
+  }
+}
+
+// NPC CHARACTER (detailed)
+function drawNPC(x,y,t,isGroom){
+  // shadow
+  CX.fillStyle='rgba(0,0,0,0.25)';CX.fillRect(x-10,y+20,20,6);
+  // shoes
+  px(x-8,y+16,'#2a1a0a');px(x-8,y+16,8,6,'#2a1a0a');
+  px(x+2,y+16,8,6,'#2a1a0a');
+  // pants
+  const pant=isGroom?'#1a1a3a':'#2a0a2a';
+  px(x-8,y+4,7,14,pant);px(x+1,y+4,7,14,pant);
+  // pant highlights
+  px(x-8,y+4,2,14,'rgba(255,255,255,0.08)');
+  // body/suit
+  const suit=isGroom?'#e8e8f0':'#f8c8d8';
+  const suitDark=isGroom?'#c8c8d8':'#d8a8b8';
+  px(x-9,y-12,18,18,suit);
+  // suit lapels
+  px(x-9,y-12,6,18,suitDark);px(x+3,y-12,6,18,suitDark);
+  // tie/bow
+  if(isGroom){px(x-2,y-10,4,12,'#c00030');px(x-3,y-10,2,4,'#e00040');px(x+1,y-10,2,4,'#e00040');}
+  else{px(x-3,y-8,6,8,'#ff69b4');px(x-2,y-10,4,4,'#ff9ef5');}
+  // neck
+  px(x-2,y-14,4,4,'#f0d0b0');
+  // head
+  px(x-6,y-28,12,14,'#f0d0b0');
+  // hair
+  if(isGroom){px(x-6,y-28,12,5,'#2a1a0a');px(x-6,y-28,3,8,'#2a1a0a');}
+  else{
+    px(x-7,y-28,13,4,'#2a1a0a');
+    px(x-7,y-26,3,12,'#2a1a0a');
+    px(x+5,y-26,3,10,'#2a1a0a');
+    // hair decoration
+    px(x-2,y-30,4,4,'#ff69b4');
+  }
+  // face
+  const ey=y-22;
+  px(x-4,ey,2,2,'#1a0a0a');px(x+2,ey,2,2,'#1a0a0a');
+  // smile
+  px(x-3,ey+6,2,1,'#c0705a');px(x-1,ey+7,4,1,'#c0705a');px(x+3,ey+6,2,1,'#c0705a');
+  // blush
+  px(x-6,ey+3,4,2,'rgba(255,150,150,.5)');px(x+2,ey+3,4,2,'rgba(255,150,150,.5)');
+  // arms
+  const armSwing=Math.sin(t*3)*.3;
+  px(x-12,y-10,4,12,'#f0d0b0');// left arm
+  px(x+8,y-10,4,12,'#f0d0b0');// right arm
+  // hands
+  px(x-13,y+2,4,4,'#f0d0b0');px(x+9,y+2,4,4,'#f0d0b0');
+}
+
+// PLAYER CHARACTER
+function drawPlayer(x,y,dir,frame,moving){
+  const fx=Math.round(x),fy=Math.round(y);
+  // shadow
+  CX.fillStyle='rgba(0,0,0,0.3)';CX.fillRect(fx-8,fy+22,16,5);
+  // leg anim
+  const la=moving?Math.sin(frame*.8)*6:0;
+  // shoes
+  px(fx-7+la,fy+14,8,5,'#2a1a0a');
+  px(fx+1-la,fy+14,8,5,'#2a1a0a');
+  // pants
+  px(fx-7+la,fy+4,6,12,'#1a1a3a');
+  px(fx+1-la,fy+4,6,12,'#1a1a3a');
+  // highlights on pants
+  px(fx-7+la,fy+4,2,10,'rgba(255,255,255,0.1)');
+  // jacket body
+  px(fx-8,fy-12,16,18,'#7b2d8b');
+  // jacket lapels
+  px(fx-8,fy-12,5,16,'#5a1a6a');px(fx+3,fy-12,5,16,'#5a1a6a');
+  // white shirt visible
+  px(fx-2,fy-12,4,12,'#f0f0ff');
+  // collar
+  px(fx-3,fy-14,6,4,'#f0f0ff');
+  // arms
+  const aw=moving?Math.sin(frame*.8)*4:0;
+  px(fx-12,fy-10-aw,4,14,'#7b2d8b');
+  px(fx+8,fy-10+aw,4,14,'#7b2d8b');
+  px(fx-13,fy+4,5,5,'#f0d0b0');// left hand
+  px(fx+8,fy+4,5,5,'#f0d0b0');// right hand
+  // neck
+  px(fx-2,fy-16,4,5,'#f0d0b0');
+  // head
+  px(fx-7,fy-30,14,14,'#f0d0b0');
+  // hair
+  px(fx-7,fy-30,14,5,'#2a1a0a');
+  px(fx-7,fy-28,3,8,'#2a1a0a');
+  // eyes
+  if(dir==='left'){px(fx-5,fy-23,2,2,'#1a0a0a');}
+  else if(dir==='right'){px(fx+3,fy-23,2,2,'#1a0a0a');}
+  else{px(fx-4,fy-23,2,2,'#1a0a0a');px(fx+2,fy-23,2,2,'#1a0a0a');}
+  // blush
+  px(fx-7,fy-21,4,2,'rgba(255,150,150,.4)');px(fx+3,fy-21,4,2,'rgba(255,150,150,.4)');
+  // smile
+  px(fx-2,fy-18,4,1,'#c0705a');
+}
+
+// ============================================================
+// WORLD / MAP DESIGN
+// ============================================================
+// Side-scrolling: world is WIDE, player walks left/right
+// Sections are placed horizontally
+const SECTIONS=[
+  {id:'home',   x:0,    label:'🏡 Rumah', col:'#7b3a2e', roof:'#8b2020'},
+  {id:'galeri', x:520,  label:'📷 Galeri', col:'#2e5a7b', roof:'#1a3a5a'},
+  {id:'story',  x:1080, label:'💌 Kisah',  col:'#4a2e7b', roof:'#2a1a5a'},
+  {id:'acara',  x:1640, label:'📅 Acara',  col:'#7b4a1a', roof:'#5a3010'},
+  {id:'lokasi', x:2200, label:'📍 Lokasi', col:'#1a6b3a', roof:'#0d4a25'},
+  {id:'rsvp',   x:2760, label:'✉ RSVP',   col:'#6b1a5a', roof:'#4a0a3a'},
+];
+const WORLD_W=3400;
+const GROUND_Y_RATIO=0.72;
+const BLDG_W=200,BLDG_H=160;
+
+// player
+let pl={x:180,dir:'right',frame:0,ft:0,moving:false};
+let camX=0;
+let keys={},td={l:false,r:false};
+let nearSection=null,dlgActive=false,dlgQueue=[],dlgTyper=null;
+let rsvpList=[];
+let galIdx=0;
+let fc=0,lastT2=0;
+
+// floating particles
+let petals=[];
+let cdInterval=null;
+
+// ============================================================
+// MAIN GAME LOOP
+// ============================================================
+function gameLoop(ts){
+  requestAnimationFrame(gameLoop);
+  const dt=Math.min((ts-lastT2)/16.67,3);lastT2=ts;fc++;
+  const t=ts/1000;
+
+  const GY=H*GROUND_Y_RATIO;
+  const playerY=GY;
+
+  // === INPUT ===
+  const moving=(keys['ArrowLeft']||keys['a']||td.l)||(keys['ArrowRight']||keys['d']||td.r);
+  if((keys['ArrowLeft']||keys['a']||td.l)&&!dlgActive&&!document.getElementById('pop').classList.contains('on')){
+    pl.x=Math.max(60,pl.x-3);pl.dir='left';
+  }
+  if((keys['ArrowRight']||keys['d']||td.r)&&!dlgActive&&!document.getElementById('pop').classList.contains('on')){
+    pl.x=Math.min(WORLD_W-60,pl.x+3);pl.dir='right';
+  }
+  pl.moving=moving&&!dlgActive;
+
+  // player anim frame
+  if(pl.moving){pl.ft++;if(pl.ft>5){pl.frame++;pl.ft=0;}}else{pl.frame=0;pl.ft=0;}
+
+  // smooth camera follow
+  const targetCam=pl.x-W/2;
+  camX+=(Math.max(0,Math.min(targetCam,WORLD_W-W))-camX)*.12;
+
+  // === DRAW ===
+  drawSky();
+  drawBGStars(t);
+  drawMoon(camX);
+  drawMountains(camX);
+  drawLanterns(t,camX);
+
+  // parallax mid layer - distant trees
+  for(let i=0;i<20;i++){
+    const tx=(i*200-camX*.3+WORLD_W*10)%( WORLD_W+400)-100;
+    if(tx>-100&&tx<W+60)drawTree(tx,GY*0.82-40,.7);
+  }
+
+  drawGround();
+
+  // fences
+  for(let i=0;i<WORLD_W;i+=320){
+    const fx=i-camX;
+    if(fx>-100&&fx<W+20)drawFence(fx,GY-6,80);
+  }
+
+  // flowers between buildings
+  for(let i=0;i<WORLD_W;i+=90){
+    const flx=i-camX;
+    if(flx>-30&&flx<W+30)drawFlowers(flx,GY-16);
+  }
+
+  // === SECTIONS / BUILDINGS ===
+  nearSection=null;
+  SECTIONS.forEach(s=>{
+    const bx=s.x-camX;
+    if(bx>-BLDG_W-100&&bx<W+100){
+      const dist=Math.abs(pl.x-(s.x+BLDG_W/2));
+      const isNear=dist<130;
+      if(isNear)nearSection=s;
+      // trees around building
+      drawTree(bx-60,GY-52,1);
+      drawTree(bx+BLDG_W+20,GY-52,1);
+      drawBuilding(bx,GY-BLDG_H,BLDG_W,BLDG_H,s.col,s.roof,s.label,isNear);
+    }
+  });
+
+  // player NPCs near some buildings
+  SECTIONS.forEach((s,i)=>{
+    if(i===0){// home section has couple
+      const nx=s.x+BLDG_W*.35-camX;
+      const ny=GY-4;
+      if(nx>-40&&nx<W+40){drawNPC(nx,ny,t,true);drawNPC(nx+36,ny,t,false);}
+    }
+  });
+
+  // petals
+  if(Math.random()<.02)petals.push({x:Math.random()*W,y:-10,vx:(Math.random()-.5)*.6,vy:.6+Math.random()*.4,r:0,col:['#ffb7d5','#ffc0cb','#e8c5ff','#fffacd'][Math.floor(Math.random()*4)],life:1});
+  petals=petals.filter(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.r+=.025;p.life-=.0022;
+    CX.save();CX.translate(p.x,p.y);CX.rotate(p.r);CX.globalAlpha=p.life*.8;
+    px(-3,-3,6,6,p.col);CX.restore();
+    return p.life>0&&p.y<H+20;
+  });
+
+  // player
+  drawPlayer(pl.x-camX,playerY,pl.dir,pl.frame,pl.moving);
+
+  // interact bubble above player
+  if(nearSection&&!dlgActive&&!document.getElementById('pop').classList.contains('on')){
+    const bx=pl.x-camX,by=playerY-60;
+    document.getElementById('ibubble').style.display='block';
+    document.getElementById('ibubble').style.left=(bx-40)+'px';
+    document.getElementById('ibubble').style.top=(by-30)+'px';
+    document.getElementById('ibubble').textContent='▲ '+nearSection.label;
+  } else {
+    document.getElementById('ibubble').style.display='none';
+  }
+}
+
+// ============================================================
+// DIALOG SYSTEM
+// ============================================================
+function showDlg(name,lines,cb){
+  dlgActive=true;dlgQueue=[...lines];
+  const dlg=document.getElementById('dlg');
+  dlg.style.display='block';
+  document.getElementById('dlg-name').textContent=name;
+  document.getElementById('dlg-choices').innerHTML='';
+  document.getElementById('dlg-arrow').style.display='block';
+  typeLine(dlgQueue.shift(),cb);
+}
+function typeLine(line,cb){
+  const el=document.getElementById('dlg-text');
+  el.textContent='';el._full=line;el._cb=cb;
+  let i=0;
+  if(dlgTyper)clearInterval(dlgTyper);
+  dlgTyper=setInterval(()=>{
+    el.textContent=line.slice(0,++i);
+    if(i>=line.length){clearInterval(dlgTyper);dlgTyper=null;el._full=null;}
+  },24);
+}
+function advanceDlg(){
+  const el=document.getElementById('dlg-text');
+  if(dlgTyper){clearInterval(dlgTyper);dlgTyper=null;if(el._full){el.textContent=el._full;el._full=null;}return;}
+  if(dlgQueue.length>0){typeLine(dlgQueue.shift(),el._cb);}
+  else{
+    document.getElementById('dlg').style.display='none';
+    dlgActive=false;
+    if(el._cb)el._cb();
+  }
+}
+
+// ============================================================
+// POPUP
+// ============================================================
+function openPopup(title,html){
+  document.getElementById('pop-title').textContent=title;
+  document.getElementById('pop-body').innerHTML=html;
+  document.getElementById('pop').classList.add('on');
+  document.getElementById('pop-box').scrollTop=0;
+}
+function closePopup(){document.getElementById('pop').classList.remove('on');clearInterval(cdInterval);}
+document.getElementById('pop-x').addEventListener('click',closePopup);
+document.getElementById('pop-x').addEventListener('touchend',e=>{e.preventDefault();closePopup();});
+
+// ============================================================
+// SECTION INTERACTIONS
+// ============================================================
+function interact(){
+  if(document.getElementById('pop').classList.contains('on')){closePopup();return;}
+  if(dlgActive){advanceDlg();return;}
+  if(!nearSection)return;
+  switch(nearSection.id){
+    case 'home':    doHome();break;
+    case 'galeri':  doGallery();break;
+    case 'story':   doStory();break;
+    case 'acara':   doAcara();break;
+    case 'lokasi':  doLokasi();break;
+    case 'rsvp':    doRSVP();break;
+  }
+}
+
+function doHome(){
+  showDlg('💜 Fulan & Fulanah',[
+    'Assalamu\'alaikum, selamat datang!',
+    'Kami mengundang kamu ke hari paling bahagia dalam hidup kami.',
+    'Jelajahi desa ini untuk melihat semua info pernikahan kami ✨',
+    'Gunakan tombol ◀ ▶ untuk berjalan, dan AKSI untuk berinteraksi!',
+  ]);
+}
+
+const GAL=[
+  {e:'🌸',t:'Pertemuan Pertama',d:'Takdir mempertemukan kami di waktu yang indah.'},
+  {e:'🌹',t:'Momen Spesial',d:'Setiap hari bersama terasa seperti petualangan baru.'},
+  {e:'💍',t:'Lamaran',d:'Dengan cincin dan doa, ia meminta menemaninya selamanya.'},
+  {e:'💑',t:'Tunangan',d:'Menunggu hari suci bersama keluarga tercinta.'},
+  {e:'🕌',t:'28 Februari 2026',d:'Hari yang dinanti-nantikan akhirnya tiba!'},
+];
+function doGallery(){galIdx=0;renderGal();}
+function renderGal(){
+  const g=GAL[galIdx];
+  openPopup('📷 GALERI FOTO',`
+    <div style="text-align:center;padding:12px 0">
+      <div style="font-size:72px;margin:8px 0;filter:drop-shadow(0 0 12px rgba(255,150,200,0.4))">${g.e}</div>
+      <div style="font-size:8px;color:#e8c5ff;margin-bottom:8px">${g.t}</div>
+      <div style="font-size:11px;color:#9b8bbb;margin-bottom:20px;line-height:1.6">${g.d}</div>
+      <div style="display:flex;gap:10px;justify-content:center;align-items:center">
+        <button class="pbtn" style="width:48px" onclick="galNav(-1)">◀</button>
+        <div style="font-size:8px;color:#7b6b9b">${galIdx+1} / ${GAL.length}</div>
+        <button class="pbtn" style="width:48px" onclick="galNav(1)">▶</button>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:6px;justify-content:center">
+        ${GAL.map((_,i)=>`<div onclick="galJump(${i})" style="width:8px;height:8px;background:${i===galIdx?'#e8c5ff':'#4a2a6a'};cursor:pointer"></div>`).join('')}
+      </div>
+    </div>`);
+}
+window.galNav=d=>{galIdx=(galIdx+d+GAL.length)%GAL.length;renderGal();};
+window.galJump=i=>{galIdx=i;renderGal();};
+
+function doStory(){
+  openPopup('💌 KISAH CINTA',`
+    <div style="text-align:center;font-size:24px;margin-bottom:12px">💜</div>
+    <h3>Pertemuan — 2022</h3>
+    <div class="ecard">
+      <div class="ecard-title">Awal yang Indah</div>
+      <p>Takdir mempertemukan dua jiwa yang saling melengkapi. Di sinilah segalanya bermula, dari sebuah senyum sederhana.</p>
+    </div>
+    <h3>Pendekatan — 2023</h3>
+    <div class="ecard">
+      <div class="ecard-title">Mengenal Lebih Dalam</div>
+      <p>Hari-hari berlalu dengan obrolan panjang dan tawa yang tak ada habisnya. Perasaan itu tumbuh perlahan namun pasti.</p>
+    </div>
+    <h3>Lamaran — 2024</h3>
+    <div class="ecard">
+      <div class="ecard-title">Janji Suci</div>
+      <p>Dengan sebuah cincin dan doa yang tulus, ia meminta untuk menemaninya di setiap langkah kehidupan.</p>
+    </div>
+    <h3>Pernikahan — 2026</h3>
+    <div class="ecard">
+      <div class="ecard-title">Hari Bahagia ✨</div>
+      <p>Sabtu, 28 Februari 2026. Hari yang paling dinantikan, di mana dua hati menjadi satu dalam ikatan yang suci.</p>
+    </div>`);
+}
+
+function doAcara(){
+  const tgt=new Date('2026-02-28T08:00:00');
+  function getCD(){
+    const d=Math.max(0,tgt-new Date());
+    return{d:Math.floor(d/864e5),h:Math.floor(d%864e5/36e5),m:Math.floor(d%36e5/6e4),s:Math.floor(d%6e4/1e3)};
+  }
+  const c=getCD();
+  openPopup('📅 DETAIL ACARA',`
+    <div class="ecard">
+      <div class="ecard-title">🕌 AKAD NIKAH</div>
+      <p>📅 Sabtu, 28 Februari 2026</p>
+      <p>⏰ 08.00 WIB — Selesai</p>
+      <p>📍 Masjid Al-Barokah, Bandung</p>
+    </div>
+    <div class="ecard">
+      <div class="ecard-title">🎉 RESEPSI</div>
+      <p>📅 Sabtu, 28 Februari 2026</p>
+      <p>⏰ 11.00 – 15.00 WIB</p>
+      <p>📍 Gedung Serbaguna Al-Barokah, Bandung</p>
+    </div>
+    <h3>⏳ HITUNG MUNDUR</h3>
+    <div class="cdown">
+      <div class="cu"><span class="cn" id="cd-d">${c.d}</span><span class="cl">HARI</span></div>
+      <div class="cu"><span class="cn" id="cd-h">${c.h}</span><span class="cl">JAM</span></div>
+      <div class="cu"><span class="cn" id="cd-m">${c.m}</span><span class="cl">MNT</span></div>
+      <div class="cu"><span class="cn" id="cd-s">${c.s}</span><span class="cl">DTK</span></div>
+    </div>
+    <p style="font-size:10px;color:#7b6b9b;text-align:center;margin-top:8px">Dress code: Ungu & Putih 💜</p>`);
+  clearInterval(cdInterval);
+  cdInterval=setInterval(()=>{
+    const c=getCD();
+    ['d','h','m','s'].forEach((k,i)=>{const el=document.getElementById('cd-'+k);if(el)el.textContent=[c.d,c.h,c.m,c.s][i];});
+  },1000);
+}
+
+function doLokasi(){
+  openPopup('📍 LOKASI',`
+    <p style="margin-bottom:4px;font-size:10px">Gedung Serbaguna Al-Barokah</p>
+    <p style="font-size:10px;color:#9b8bbb">Jl. Raya Bandung No. 123, Bandung, Jawa Barat</p>
+    <div style="background:#1a0a3e;border:2px solid #7b2d8b;height:130px;display:flex;align-items:center;justify-content:center;margin:14px 0;position:relative">
+      <div style="font-size:36px">📍</div>
+      <div style="position:absolute;bottom:8px;font-size:8px;color:#c9a0dc">Tap tombol di bawah untuk navigasi</div>
+    </div>
+    <button class="pbtn" onclick="window.open('https://maps.google.com/?q=Bandung','_blank')">🗺 GOOGLE MAPS</button>
+    <button class="pbtn" style="margin-top:8px" onclick="window.open('https://waze.com/ul?q=Bandung','_blank')">🚗 NAVIGASI WAZE</button>
+    <div class="ecard" style="margin-top:14px">
+      <div class="ecard-title">🚌 PETUNJUK ARAH</div>
+      <p style="font-size:10px">Dari Stasiun Bandung: 10 menit naik angkot ke arah selatan, turun di perempatan Al-Barokah.</p>
+    </div>`);
+}
+
+function doRSVP(){
+  const list=rsvpList.length===0
+    ?'<p style="color:#7b6b9b;text-align:center;margin-top:8px;font-size:10px">Belum ada ucapan 💜</p>'
+    :rsvpList.map(r=>`<div class="uitem"><div class="uname">${r.nama} ${r.hadir?'✅':'❌'}</div><div class="utext">${r.ucapan}</div></div>`).join('');
+  openPopup('✉ RSVP & UCAPAN',`
+    <div class="ecard">
+      <div class="ecard-title">KONFIRMASI KEHADIRAN</div>
+      <p style="font-size:10px;margin-bottom:0">Mohon konfirmasi kehadiranmu paling lambat 14 Februari 2026.</p>
+    </div>
+    <h3>ISI FORM</h3>
+    <input id="r-nama" placeholder="Nama lengkap kamu...">
+    <select id="r-hadir">
+      <option value="ya">✅ Insya Allah hadir</option>
+      <option value="tidak">❌ Belum bisa hadir</option>
+    </select>
+    <input id="r-tamu" type="number" min="1" max="10" placeholder="Jumlah tamu (termasuk kamu)">
+    <textarea id="r-ucapan" placeholder="Tulis doa & ucapan untuk Fulan & Fulanah..."></textarea>
+    <button class="pbtn" onclick="kirimRSVP()">💌 KIRIM UCAPAN</button>
+    <h3 style="margin-top:18px">💬 UCAPAN & DOA</h3>
+    <div id="ulist">${list}</div>`);
+}
+window.kirimRSVP=function(){
+  const nama=(document.getElementById('r-nama')||{}).value||'';
+  const hadir=(document.getElementById('r-hadir')||{}).value==='ya';
+  const ucapan=(document.getElementById('r-ucapan')||{}).value||'';
+  if(!nama.trim()||!ucapan.trim()){alert('Mohon isi nama dan ucapan ya 💜');return;}
+  rsvpList.unshift({nama:nama.trim(),hadir,ucapan:ucapan.trim()});
+  doRSVP();
+};
+
+// ============================================================
+// INPUT
+// ============================================================
+document.addEventListener('keydown',e=>{
+  keys[e.key]=true;
+  if(e.key==='e'||e.key==='E'||e.key===' '){e.preventDefault();interact();}
+  if(e.key==='Escape')closePopup();
+});
+document.addEventListener('keyup',e=>delete keys[e.key]);
+
+function dset(d,v){td[d]=v;}
+[['dl','l'],['dr','r'],['du','u'],['dd','d']].forEach(([id,d])=>{
+  const el=document.getElementById(id);if(!el)return;
+  el.addEventListener('touchstart',e=>{e.preventDefault();dset(d,true);},{passive:false});
+  el.addEventListener('touchend',e=>{e.preventDefault();dset(d,false);},{passive:false});
+  el.addEventListener('mousedown',()=>dset(d,true));
+  el.addEventListener('mouseup',()=>dset(d,false));
+  el.addEventListener('mouseleave',()=>dset(d,false));
+});
+
+const abtn=document.getElementById('abtn');
+abtn.addEventListener('click',interact);
+abtn.addEventListener('touchend',e=>{e.preventDefault();interact();},{passive:false});
+
+// ============================================================
+// START GAME
+// ============================================================
+function startGame(){
+  const gw=document.getElementById('game');
+  if(gw.style.display==='block')return;
+  initAC();musicOn=true;startBGM();
+  const tr=document.getElementById('tr');
+  tr.classList.add('on');
+  setTimeout(()=>{
+    document.getElementById('opening').style.display='none';
+    gw.style.display='block';
+    document.getElementById('hud').style.display='block';
+    document.getElementById('controls').style.display='block';
+    document.getElementById('mbtn').style.display='block';
+    setupCanvas();
+    lastT2=performance.now();
+    requestAnimationFrame(gameLoop);
+    setTimeout(()=>tr.classList.remove('on'),200);
+    setTimeout(()=>showDlg('🎮 SELAMAT DATANG',[
+      'Assalamu\'alaikum! Selamat datang 💜',
+      'Gunakan ◀ ▶ untuk berjalan menjelajahi desa.',
+      'Saat dekat bangunan, tekan AKSI untuk masuk.',
+      'Ada 6 tempat yang bisa kamu kunjungi. Selamat menjelajah!'
+    ]),500);
+  },500);
+}
+
+// Button — triple binding
+const obtn=document.getElementById('open-btn');
+obtn.addEventListener('click',startGame);
+obtn.addEventListener('touchend',e=>{e.preventDefault();e.stopPropagation();startGame();},{passive:false});
+obtn.addEventListener('pointerup',startGame);
+</script>
+</body>
+</html>
